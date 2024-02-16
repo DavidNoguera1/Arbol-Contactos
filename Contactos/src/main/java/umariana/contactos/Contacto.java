@@ -8,6 +8,43 @@ package umariana.contactos;
  *
  * @author Sistemas
  */
-public class Contacto {
+public class Contacto  {
+
+    // Atributos
+    
+    /**
+     * Nombre del IDcontacto
+     */
+    private String IDcontacto;
+    
+    /**
+     * Nombre del contacto
+     */
+    private String nombre;
+
+    /**
+     * Tel�fono del contacto
+     */
+    private String telefono;
+
+    /**
+     * Direcci�n del contacto
+     */
+    private String direccion;
+
+    /**
+     * Correo electr�nico del contacto
+     */
+    private String eMail;
+
+    /**
+     * Sub�rbol izquierdo de contactos
+     */
+    private Contacto izq;
+
+    /**
+     * Sub�rbol derecho de contactos
+     */
+    private Contacto der;
     
 }
