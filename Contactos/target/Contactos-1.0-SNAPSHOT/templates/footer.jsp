@@ -1,6 +1,6 @@
 <footer class="fixed-bottom py-3 bg-dark text-white text-center">
         <div class="container">
-            <p class="m-0">Copyright &copy;Contactos (Arevalo,Noguera, Bolaños) 2023</p>
+            <p class="m-0">Copyright &copy;Contactos (Arevalo,Noguera, Bolaños) 2024</p>
         </div>
 </footer>
 
