@@ -1,8 +1,6 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.mycompany.contactos.Contacto"%>
 <%@include file= "templates/header.jsp" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.mycompany.contactos.Contacto" %>
-<%@ page import="com.mycompany.contactos.Directorio" %>
-<%@ page import="com.mycompany.contactos.Guardado" %>
 
 <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
     <div class="bg-dark p-4">
@@ -24,6 +22,9 @@
     <h2>Lista de Contactos</h2>
 
     <div class="table-responsive">
+        <%
+            ArrayList<Contacto> listaContactos = (ArrayList<Contacto>)request.getAttribute("listaContactos");
+        %>
         <table class="table table-striped table-bordered table-dark">
             <thead>
                 <tr>
@@ -34,27 +35,51 @@
                     <th scope="col">Teléfono</th>
                     <th scope="col">Correo</th>
                     <th scope="col">Acciones</th>
+                    <div class="input-group">
+                        <div class="form-outline" data-mdb-input-init>
+                          <input type="search" id="form1" class="form-control" />
+                          <label class="form-label" for="form1">Search</label>
+                        </div>
+                        <button type="button" class="btn btn-primary" data-mdb-ripple-init>
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
                 </tr>
             </thead>
             <tbody>
-                <% 
-                    Directorio directorioContactos = Guardado.cargarContactos(getServletContext());
-                    for (Contacto contacto : directorioContactos.getContactos()) {
+                <%
+                    if (listaContactos != null) {
+                        for(Contacto contacto : listaContactos) {
                 %>
-                <tr>
-                    <td><%= contacto.getIdContacto() %></td>
-                    <td><%= contacto.getNombre() %></td>
-                    <td><%= contacto.getApellido() %></td>
-                    <td><%= contacto.getDireccion() %></td>
-                    <td><%= contacto.getCelular() %></td>
-                    <td><%= contacto.geteMail() %></td>
-                    <td>
-                        <!-- Add any action buttons or links here -->
-                    </td>
-                </tr>
-                <% } %>
-            </tbody>
+                            <tr>
+                        <td><%= contacto.getIdContacto() %></td>
+                        <td><%= contacto.getNombre() %></td>
+                        <td><%= contacto.getApellido() %></td>
+                        <td><%= contacto.getDireccion() %></td>
+                        <td><%= contacto.getCelular() %></td>
+                        <td><%= contacto.geteMail() %></td>
+                        <td>
+                            <!-- Icono de ver -->
+                            <a href="#" title="Ver" class="btn btn-primary"><i class="fas fa-eye"></i></a>
 
+                            <!-- Icono de editar -->
+                            <a href="#" title="Editar" class="btn btn-success"><i class="fas fa-edit"></i></a>
+
+                            <!-- Icono de eliminar -->
+                            <a href="#" title="Eliminar" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                <%
+                        }
+                    } else {
+                %>
+                        <tr>
+                            <td colspan="7">No hay contactos disponibles</td>
+                        </tr>
+                <%
+                    }
+                %>
+            </tbody>
         </table>
     </div>
 </div>
@@ -67,7 +92,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/SvContacto" method="POST">
+                <form action="SvContacto" method="POST">
                     <div class="mb-3">
                         <label for="nombre" class="col-form-label">Nombre:</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa su nombre" required>
@@ -102,6 +127,5 @@
         </div>
     </div>
 </div>
-
 
 <%@include file= "templates/footer.jsp" %>

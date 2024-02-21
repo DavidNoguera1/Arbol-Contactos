@@ -4,88 +4,68 @@
  */
 package com.mycompany.contactos;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  *
- * @author PC
+ * @author juand
  */
 public class Directorio {
-    // -----------------------------------------------------------------
-    // Atributos
-    // -----------------------------------------------------------------
-
-    /**
-     * Ra�z del �rbol de contactos presentes en el directorio
-     */
+    
     private Contacto contactoRaiz;
-
-    /**
-     * N�mero de contactos en el directorio
-     */
+    
     private int numContactos;
-
-    // -----------------------------------------------------------------
-    // Constructores
-    // -----------------------------------------------------------------
-    /**
-     * Crea el directorio sin ning�n contacto
-     */
-    public Directorio() {
+    
+    public Directorio( )
+    {
         contactoRaiz = null;
         numContactos = 0;
     }
-
-    // -----------------------------------------------------------------
-    // M�todos
-    // -----------------------------------------------------------------
-    /**
-     * Agrega un contacto al directorio <br>
-     * <b>post: </b>El contacto ha sido agregado al directorio.
-     *
-     * @param nom nombre del contacto - nom != null
-     * @param tel tel�fono del contacto
-     * @param dir direcci�n del contacto
-     * @param email direcci�n electr�nica del contacto
-     * @throws ContactoRepetidoException cuando ya existe un contacto con ese
-     * nombre
-     */
-    public void agregarContacto(String id, String nombre, String apellido, String celular, String direccion, String email) throws IOException {
-        Contacto c = new Contacto(id, nombre, apellido, celular, direccion, email, null, null);
-
-        if (contactoRaiz == null) {
-            contactoRaiz = c;
-        } else {
-            contactoRaiz.insertar(c);
-        }
-
-        numContactos++;
+    
+    public ArrayList<Contacto> obtenerTodosLosContactos() {
+        ArrayList<Contacto> listaContactos = new ArrayList<>();
+        agregarContactosALista(contactoRaiz, listaContactos);
+        return listaContactos;
     }
 
-    /**
-     * Elimina del directorio el contacto con el nombre indicado <br>
-     * <b>post: </b>El contacto ha sido eliminado del directorio <br>
-     *
-     * @param nombre nombre del contacto a eliminar - existe en el directorio un
-     * contacto con dicho nombre
-     */
-    public void eliminarContacto(String nombre) {
+    private void agregarContactosALista(Contacto contacto, ArrayList<Contacto> listaContactos) {
+        if (contacto != null) {
+            agregarContactosALista(contacto.getIzq(), listaContactos);
+            listaContactos.add(contacto);
+            agregarContactosALista(contacto.getDer(), listaContactos);
+        }
+    }
+
+    
+    public void agregarContacto(int idContacto, String nombre, String apellido, String celular, String direccion, String eMail) throws ContactoRepetidoException
+    {
+        Contacto c = new Contacto(idContacto, nombre, apellido, celular, direccion, eMail, null, null);
+        if( contactoRaiz == null )
+            contactoRaiz = c;
+        else
+            contactoRaiz.insertar( c );
+        numContactos++;
+        
+    }
+    
+    public  void eliminarContacto(String nombre) {
         contactoRaiz = contactoRaiz.eliminar(nombre);
         numContactos--;
 
     }
-
-    /**
-     * Busca y retorna el contacto del nombre indicado. Si no lo encuentra
-     * retorna null.
-     *
-     * @param nombre nombre del contacto a buscar - nombre != null
-     * @return contacto correspondiente al nombre, si no existe retorna null
-     */
-    public Contacto buscarContacto(String nombre) {
-        return contactoRaiz == null ? null : contactoRaiz.buscar(nombre);
+    
+    public Contacto buscarContacto( String nombre )
+    {
+        return contactoRaiz == null ? null : contactoRaiz.buscar( nombre );
     }
-
+    
+    /**
+     * Retorna el n�mero de contactos que est�n en el directorio
+     *
+     * @return n�mero de contactos presentes en el �rbol
+     */
+    public int darPeso() {
+        return contactoRaiz == null ? 0 : contactoRaiz.darPeso();
+    }
+    
 }

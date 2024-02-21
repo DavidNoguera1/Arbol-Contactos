@@ -3,20 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.contactos;
-import java.io.IOException;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+
 /**
  *
  * @author juand
  */
-public class Contacto implements Comparable {
-    // Atributos
+public class Contacto implements Comparable, Serializable{
     
     /**
-     * id del contacto
+     * id unico del contacto
      */
-    private String idContacto;
-    
+    private int idContacto;
     /**
      * Nombre del contacto
      */
@@ -55,7 +55,7 @@ public class Contacto implements Comparable {
     public Contacto() {
     }
 
-    public Contacto(String idContacto, String nombre, String apellido, String celular, String direccion, String eMail, Contacto izq, Contacto der) {
+    public Contacto(int idContacto, String nombre, String apellido, String celular, String direccion, String eMail, Contacto izq, Contacto der) {
         this.idContacto = idContacto;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -66,11 +66,16 @@ public class Contacto implements Comparable {
         this.der = null;
     }
 
-    public String getIdContacto() {
+    public int compareTo(Object o) {
+        Contacto otro = (Contacto) o;
+        return nombre.compareToIgnoreCase(otro.nombre);
+    }
+
+    public int getIdContacto() {
         return idContacto;
     }
 
-    public void setIdContacto(String idContacto) {
+    public void setIdContacto(int idContacto) {
         this.idContacto = idContacto;
     }
 
@@ -81,13 +86,7 @@ public class Contacto implements Comparable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
-    public int compareTo( Object o )
-    {
-        Contacto otro = ( Contacto )o;
-        return nombre.compareToIgnoreCase( otro.nombre );
-    }
-    
+
     public String getApellido() {
         return apellido;
     }
@@ -119,11 +118,23 @@ public class Contacto implements Comparable {
     public void seteMail(String eMail) {
         this.eMail = eMail;
     }
+
+    public Contacto getIzq() {
+        return izq;
+    }
+
+    public void setIzq(Contacto izq) {
+        this.izq = izq;
+    }
+
+    public Contacto getDer() {
+        return der;
+    }
+
+    public void setDer(Contacto der) {
+        this.der = der;
+    }
     
-    /**
-     * Indica si este nodo es una hoja
-     * @return true si este nodo es una hoja y false en caso contrario
-     */
     public boolean esHoja( )
     {
         return izq == null && der == null;
@@ -233,13 +244,12 @@ public class Contacto implements Comparable {
     /**
      * Inserta un nuevo contacto al �rbol que comienza en este nodo.
      * @param nuevo el el nuevo contacto que se va a insertar - nuevo != null
-     * @throws java.io.IOException
+     * @throws ContactoRepetidoException se lanza esta excepci�n si el contacto que se quiere agregar ya est� en el directorio
      */
-    
-    public void insertar( Contacto nuevo ) throws IOException
+    public void insertar( Contacto nuevo ) throws ContactoRepetidoException
     {
         if( compareTo( nuevo ) == 0 )
-            throw new IOException( nuevo.nombre );
+            throw new ContactoRepetidoException( nuevo.nombre );
 
         if( compareTo( nuevo ) > 0 )
         {
@@ -258,40 +268,8 @@ public class Contacto implements Comparable {
                 der.insertar( nuevo );
         }
     }
-    
+
     /**
-     * Elimina un contacto del �rbol que comienza en este nodo.
-     * @param unNombre nombre del contacto que se va a eliminar - hay un contacto en el �rbol que se llama unNombre
-     * @return el �rbol de contactos despu�s de eliminar el contacto indicado
-     */
-    public Contacto eliminar( String unNombre )
-    {
-        if( esHoja( ) )
-            // Tiene que ser el elemento que estamos buscando
-            return null;
-        if( nombre.compareToIgnoreCase( unNombre ) == 0 )
-        {
-            if( izq == null )
-                return der;
-            if( der == null )
-                return izq;
-            // Localiza el menor contacto del sub�rbol derecho
-            Contacto sucesor = der.darMenor( );
-            // Elimina del sub�rbol derecho el elemento que acaba de localizar
-            der = der.eliminar( sucesor.getNombre( ) );
-            // Deja el elemento localizado en la ra�z del �rbol de respuesta
-            sucesor.izq = izq;
-            sucesor.der = der;
-            return sucesor;
-        }
-        else if( nombre.compareToIgnoreCase( unNombre ) > 0 )
-            izq = izq.eliminar( unNombre );
-        else
-            der = der.eliminar( unNombre );
-        return this;
-    }
-    
-/**
      * Implementaci�n iterativa para localizar un contacto en el �rbol que comienza en este nodo
      * @param unNombre nombre que se va a buscar - unNombre != null
      * @return contacto asociado al nombre. Si no lo encuentra retorna null;
@@ -325,5 +303,38 @@ public class Contacto implements Comparable {
             return ( izq == null ) ? null : izq.buscar( unNombre );
         else
             return ( der == null ) ? null : der.buscar( unNombre );
-    }    
+    }
+
+    /**
+     * Elimina un contacto del �rbol que comienza en este nodo.
+     * @param unNombre nombre del contacto que se va a eliminar - hay un contacto en el �rbol que se llama unNombre
+     * @return el �rbol de contactos despu�s de eliminar el contacto indicado
+     */
+    public Contacto eliminar( String unNombre )
+    {
+        if( esHoja( ) )
+            // Tiene que ser el elemento que estamos buscando
+            return null;
+        if( nombre.compareToIgnoreCase( unNombre ) == 0 )
+        {
+            if( izq == null )
+                return der;
+            if( der == null )
+                return izq;
+            // Localiza el menor contacto del sub�rbol derecho
+            Contacto sucesor = der.darMenor( );
+            // Elimina del sub�rbol derecho el elemento que acaba de localizar
+            der = der.eliminar( sucesor.getNombre() );
+            // Deja el elemento localizado en la ra�z del �rbol de respuesta
+            sucesor.izq = izq;
+            sucesor.der = der;
+            return sucesor;
+        }
+        else if( nombre.compareToIgnoreCase( unNombre ) > 0 )
+            izq = izq.eliminar( unNombre );
+        else
+            der = der.eliminar( unNombre );
+        return this;
+    }
+    
 }
