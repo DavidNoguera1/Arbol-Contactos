@@ -21,6 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -63,17 +64,20 @@ public class SvContacto extends HttpServlet implements Serializable {
 
             // Load the updated contact list
             ArrayList<Contacto> listaContactos = obtenerListaContactos(directorio);
-            
-            // Establece la lista de contactos como un atributo en el objeto request
-            request.setAttribute("listaContactos", listaContactos);
 
-            // Redirige a la página JSP
-            RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
-            dispatcher.forward(request, response);
+            // Set the updated contact list as a session attribute
+            HttpSession session = request.getSession();
+            session.setAttribute("listaContactos", listaContactos);
+
+            // Set the success message as a session attribute
+            session.setAttribute("successMessage", "Contacto agregado exitosamente");
+
+            // Redirect to the "index.jsp" page
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
 
         } catch (ContactoRepetidoException e) {
-            // Manejar la excepción si el contacto ya existe
-            e.printStackTrace(); // Aquí podrías mostrar un mensaje de error al usuario
+            // Handle the exception if the contact already exists
+            e.printStackTrace(); // Here you could show an error message to the user
         }
     }
 

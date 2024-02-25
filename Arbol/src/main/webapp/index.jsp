@@ -32,7 +32,7 @@
     </div>
     <div class="table-responsive">
         <%
-            ArrayList<Contacto> listaContactos = (ArrayList<Contacto>) request.getAttribute("listaContactos");
+            ArrayList<Contacto> listaContactos = (ArrayList<Contacto>) session.getAttribute("listaContactos");
         %>
         <table class="table table-striped table-bordered table-dark">
             <thead>
