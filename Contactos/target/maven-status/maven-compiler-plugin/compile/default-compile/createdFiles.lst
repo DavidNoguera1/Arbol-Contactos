@@ -1,7 +1,0 @@
-com\mycompany\contactos\Directorio.class
-servlets\SvContacto.class
-com\mycompany\contactos\ContactoRepetidoException.class
-com\mycompany\contactos\JAXRSConfiguration.class
-com\mycompany\contactos\Guardado.class
-com\mycompany\contactos\resources\JavaEE8Resource.class
-com\mycompany\contactos\Contacto.class
