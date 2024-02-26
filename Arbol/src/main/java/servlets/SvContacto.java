@@ -35,6 +35,62 @@ public class SvContacto extends HttpServlet implements Serializable {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Obtener el contexto del servlet
+        ServletContext context = getServletContext();
+
+        // Obtener la lista de contactos del contexto
+        Directorio listaContactos = (Directorio) context.getAttribute("directorio");
+
+        if (listaContactos == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+
+        String action = request.getParameter("action");
+
+        if ("deleteContact".equals(action)) {
+            String nombre = request.getParameter("nombre");
+
+            // Output some debug information
+            System.out.println("Contact to delete: " + nombre);
+
+            try {
+                // Attempt to delete the contact
+                listaContactos.eliminarContacto(nombre);
+
+                // Output some debug information
+                System.out.println("Contact deleted successfully");
+
+                // Puedes establecer algunos atributos para pasar datos a la vista
+                request.setAttribute("deletedContact", nombre);
+
+                // Guardar la lista de contactos actualizada
+                Guardado.guardarContacto(listaContactos, context);
+
+                // Actualizar la lista en la sesión
+                HttpSession session = request.getSession();
+                session.setAttribute("listaContactos", listaContactos.obtenerTodosLosContactos());
+
+                // Recargar la página después de un breve retraso (por ejemplo, 500 milisegundos)
+                response.sendRedirect(request.getContextPath() + "/index.jsp");
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+                // Puedes mostrar un mensaje de error genérico al usuario si es apropiado
+                request.setAttribute("deleteError", "Error deleting contact");
+                // Forward to the JSP to display the error message
+                RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request, response);
+            }
+        }
+
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -81,15 +137,5 @@ public class SvContacto extends HttpServlet implements Serializable {
         }
     }
 
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }

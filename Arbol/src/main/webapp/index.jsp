@@ -1,12 +1,12 @@
-
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.mycompany.arbol.Contacto"%>
 <%@include file= "templates/header.jsp" %>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
     <div class="bg-dark p-4">
-        <h5 class="text-body-emphasis h4">Directorio de Contactos</h5>
+        <h5 class="text-body-emphasis h4">Directorio de Contactos </h5>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Agregar nuevo contacto
         </button>    
@@ -22,14 +22,18 @@
 
 <div class="container mt-5">
     <h2>Lista de Contactos</h2>
+
     <div class="input-group mb-3">
         <div class="form-outline" data-mdb-input-init>
-            <input id="search-focus" type="search" id="form1" class="form-control" />
+            <input id="search-focus" type="search" id="form1" class="form-control" 
+                   placeholder="Buscar por nombre" />
         </div>
         <button type="button" class="btn btn-primary" data-mdb-ripple-init>
             <i class="fas fa-search"></i>
         </button>
     </div>
+
+
     <div class="table-responsive">
         <%
             ArrayList<Contacto> listaContactos = (ArrayList<Contacto>) session.getAttribute("listaContactos");
@@ -48,10 +52,10 @@
             </thead>
             <tbody>
                 <%
-                    if (listaContactos != null) {
+                    if (listaContactos != null && !listaContactos.isEmpty()) {
                         for (Contacto contacto : listaContactos) {
                 %>
-                <tr>
+                <tr id="<%= contacto.getNombre() %>">
                     <td><%= contacto.getIdContacto()%></td>
                     <td><%= contacto.getNombre()%></td>
                     <td><%= contacto.getApellido()%></td>
@@ -69,8 +73,6 @@
                             <i class="fas fa-eye"></i>
                         </a>
 
-
-
                         <!-- Icono de editar -->
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" title="Editar"
                            data-id="<%= contacto.getIdContacto()%>"
@@ -82,7 +84,6 @@
                             <i class="fas fa-edit"></i>
                         </a>
 
-
                         <!-- Icono de eliminar -->
                         <a href="#" title="Eliminar" class="btn btn-danger" onclick="confirmarEliminacion('<%= contacto.getNombre()%>')">
                             <i class="fas fa-trash"></i>
@@ -90,8 +91,8 @@
                     </td>
                 </tr>
                 <%
-                    }
-                } else {
+                        }
+                    } else {
                 %>
                 <tr>
                     <td colspan="7">No hay contactos disponibles</td>
@@ -104,163 +105,30 @@
     </div>
 </div>
 
-<!-- Modal de Cuestionario -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo contacto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="SvContacto" method="POST">
-                    <div class="mb-3">
-                        <label for="id" class="col-form-label">ID:</label>
-                        <input type="text" class="form-control" id="id" name="id" placeholder="Ingresa su ID" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombre" class="col-form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa su nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="apellido" class="col-form-label">Apellido:</label>
-                        <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingresa su apellido" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="direccion" class="col-form-label">Dirección:</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingresa su direccion" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="telefono" class="col-form-label">Teléfono:</label>
-                        <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ingresa su número celular" maxlength="10" required pattern="[0-9]+" title="Solo se permiten números">
-                    </div>
-                    <div class="mb-3">
-                        <label for="correo" class="col-form-label">Correo electrónico:</label>
-                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Ingresa su correo" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
 
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de visualización -->
-<div class="modal fade modal-dark" id="modalV" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Detalles del contacto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-body">
-                    <div id="contacto-details">
-                        <p><strong>Nombre: </strong><span id="modal-nombre"></span></p>
-                        <p><strong>Apellido: </strong><span id="modal-apellido"></span></p>
-                        <p><strong>Dirección: </strong><span id="modal-direccion"></span></p>
-                        <p><strong>Teléfono: </strong><span id="modal-telefono"></span></p>
-                        <p><strong>Correo: </strong><span id="modal-correo"></span></p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Script de modal de vista -->
 <script>
-    $(document).ready(function () {
-        $('#modalV').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var nombre = button.data('nombre');
-            var apellido = button.data('apellido');
-            var direccion = button.data('direccion');
-            var telefono = button.data('telefono');
-            var correo = button.data('correo');
+    $(document).ready(function() {
+        // Manejar el evento de entrada en la caja de búsqueda
+        $('#search-focus').on('input', function() {
+            var searchTerm = $(this).val().toLowerCase();
 
-            // Update the content of the span elements with the contact details
-            $('#modal-nombre').text(nombre);
-            $('#modal-apellido').text(apellido);
-            $('#modal-direccion').text(direccion);
-            $('#modal-telefono').text(telefono);
-            $('#modal-correo').text(correo);
+            // Filtrar las filas de la tabla basándonos en el término de búsqueda
+            $('tbody tr').each(function() {
+                var nombre = $(this).find('td:eq(1)').text().toLowerCase();
+
+                // Mostrar u ocultar la fila según si coincide con el término de búsqueda
+                if (nombre.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
         });
     });
 </script>
 
-<!-- Ventana Modal para Cuestionario de edicion -->      
-<div class="modal fade modal-dark" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edicion de contacto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="SvContacto" method="POST">
-                    <div class="mb-3">
-                        <label for="id" class="col-form-label">ID:</label>
-                        <input type="text" class="form-control" id="id" name="id" placeholder="Ingresa su ID" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombre" class="col-form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa su nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="apellido" class="col-form-label">Apellido:</label>
-                        <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingresa su apellido" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="direccion" class="col-form-label">Dirección:</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingresa su direccion" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="telefono" class="col-form-label">Teléfono:</label>
-                        <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ingresa su número celular" maxlength="10" required pattern="[0-9]+" title="Solo se permiten números">
-                    </div>
-                    <div class="mb-3">
-                        <label for="correo" class="col-form-label">Correo electrónico:</label>
-                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Ingresa su correo" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        
-                    </div>
-                </form>
 
-            </div>
-        </div>
-    </div>
-</div>
 
-<!--- Script de edicion --->
-<script>
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var nombre = button.data('nombre');
-        var apellido = button.data('apellido');
-        var direccion = button.data('direccion');
-        var telefono = button.data('telefono');
-        var correo = button.data('correo');
 
-        var modal = $(this);
-        modal.find('#id').val(id);
-        modal.find('#nombre').val(nombre);
-        modal.find('#apellido').val(apellido);
-        modal.find('#direccion').val(direccion);
-        modal.find('#telefono').val(telefono);
-        modal.find('#correo').val(correo);
-    });
-</script>
-
+<%@include file= "templates/modales.jsp" %>
 <%@include file= "templates/footer.jsp" %>
