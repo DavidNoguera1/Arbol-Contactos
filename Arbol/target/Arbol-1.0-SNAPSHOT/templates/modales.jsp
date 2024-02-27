@@ -97,7 +97,7 @@
     });
 </script>
 
-<!-- Ventana Modal para Cuestionario de edicion -->      
+<!-- Ventana Modal para Cuestionario de edicion -->
 <div class="modal fade modal-dark" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">
@@ -106,14 +106,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="SvContacto" method="POST">
+                <form action="SvEditado" method="POST">
                     <div class="mb-3">
                         <label for="id" class="col-form-label">ID:</label>
                         <input type="text" class="form-control" id="id" name="id" placeholder="Ingresa su ID" required>
                     </div>
                     <div class="mb-3">
                         <label for="nombre" class="col-form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa su nombre" required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa su nombre" readonly required>
                     </div>
                     <div class="mb-3">
                         <label for="apellido" class="col-form-label">Apellido:</label>
@@ -133,16 +133,15 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-
+                        <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
 </div>
 
-<!--- Script de edicion --->
+<!-- Script de edicion -->
 <script>
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
@@ -153,6 +152,7 @@
         var telefono = button.data('telefono');
         var correo = button.data('correo');
 
+        // Establecer valores en los campos del formulario
         var modal = $(this);
         modal.find('#id').val(id);
         modal.find('#nombre').val(nombre);
@@ -162,6 +162,9 @@
         modal.find('#correo').val(correo);
     });
 </script>
+
+
+
 
 
 <!--- Script de eliminacion --->

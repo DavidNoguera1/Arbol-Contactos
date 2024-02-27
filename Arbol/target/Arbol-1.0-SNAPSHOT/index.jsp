@@ -28,17 +28,41 @@
             <input id="search-focus" type="search" id="form1" class="form-control" 
                    placeholder="Buscar por nombre" />
         </div>
-        <button type="button" class="btn btn-primary" data-mdb-ripple-init>
-            <i class="fas fa-search"></i>
-        </button>
+
     </div>
+
+
+    <%
+    String alertType = (String) session.getAttribute("alertType");
+    if (alertType != null) {
+        if (alertType.equals("success")) {
+    %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Contacto agregado exitosamente, disfrute de la tabla :).
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <%
+            } else if (alertType.equals("danger")) {
+    %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        Error: Ya existe un contacto con el nombre proporcionado, por favor introduzca algún diferenciador :( .
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <%
+            }
+            // Limpiar el atributo de la sesión después de mostrar la alerta
+            session.removeAttribute("alertType");
+        }
+    %>
+
+
 
 
     <div class="table-responsive">
         <%
             ArrayList<Contacto> listaContactos = (ArrayList<Contacto>) session.getAttribute("listaContactos");
         %>
-        <table class="table table-striped table-bordered table-dark">
+        <table id="contactosTable" class="table table-striped table-bordered table-dark">
             <thead>
                 <tr>
                     <th scope="col">Id</th>
@@ -74,7 +98,7 @@
                         </a>
 
                         <!-- Icono de editar -->
-                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" title="Editar"
+                        <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editModal" title="Editar"
                            data-id="<%= contacto.getIdContacto()%>"
                            data-nombre="<%= contacto.getNombre()%>"
                            data-apellido="<%= contacto.getApellido()%>"
@@ -105,15 +129,15 @@
     </div>
 </div>
 
-
+<!--- Script de filtrado de busqueda --->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Manejar el evento de entrada en la caja de búsqueda
-        $('#search-focus').on('input', function() {
+        $('#search-focus').on('input', function () {
             var searchTerm = $(this).val().toLowerCase();
 
             // Filtrar las filas de la tabla basándonos en el término de búsqueda
-            $('tbody tr').each(function() {
+            $('tbody tr').each(function () {
                 var nombre = $(this).find('td:eq(1)').text().toLowerCase();
 
                 // Mostrar u ocultar la fila según si coincide con el término de búsqueda
@@ -126,8 +150,6 @@
         });
     });
 </script>
-
-
 
 
 <%@include file= "templates/modales.jsp" %>

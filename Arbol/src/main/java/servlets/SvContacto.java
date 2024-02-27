@@ -113,6 +113,7 @@ public class SvContacto extends HttpServlet implements Serializable {
         String id = request.getParameter("id");
 
         try {
+            // Verificar si el contacto ya existe antes de agregarlo
             directorio.agregarContacto(Integer.parseInt(id), nombre, apellido, celular, direccion, email);
 
             // Call guardarContacto to save the updated contact list
@@ -124,18 +125,19 @@ public class SvContacto extends HttpServlet implements Serializable {
             // Set the updated contact list as a session attribute
             HttpSession session = request.getSession();
             session.setAttribute("listaContactos", listaContactos);
-
-            // Set the success message as a session attribute
-            session.setAttribute("successMessage", "Contacto agregado exitosamente");
+            session.setAttribute("alertType", "success"); // Agrega este atributo para el tipo de alerta
 
             // Redirect to the "index.jsp" page
             response.sendRedirect(request.getContextPath() + "/index.jsp");
 
         } catch (ContactoRepetidoException e) {
             // Handle the exception if the contact already exists
-            e.printStackTrace(); // Here you could show an error message to the user
+            HttpSession session = request.getSession();
+            session.setAttribute("alertType", "danger"); // Agrega este atributo para el tipo de alerta
+
+            // Redirect back to the "index.jsp" page
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
         }
     }
-
 
 }
