@@ -8,6 +8,7 @@ import com.mycompany.arbol.Contacto;
 import com.mycompany.arbol.ContactoRepetidoException;
 import com.mycompany.arbol.Directorio;
 import com.mycompany.arbol.Guardado;
+import static com.mycompany.arbol.Guardado.directorioContactos;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,22 +35,43 @@ public class SvContacto extends HttpServlet implements Serializable {
     private ArrayList<Contacto> obtenerListaContactos(Directorio directorio) {
         return directorio.obtenerTodosLosContactos();
     }
+    
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        // Obtener el contexto del servlet
+        ServletContext context = config.getServletContext();
+
+        // Cargar los contactos del contexto
+        try {
+            directorioContactos = Guardado.cargarContactos(context);
+            context.setAttribute("directorio", directorioContactos);
+        } catch (IOException | ClassNotFoundException e) {
+            // Manejar la excepción adecuadamente
+            e.printStackTrace();
+            // En este punto, podrías inicializar un nuevo Directorio si no se pueden cargar los datos
+            directorioContactos = new Directorio();
+            context.setAttribute("directorio", directorioContactos);
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Obtener el contexto del servlet
         ServletContext context = getServletContext();
 
         // Obtener la lista de contactos del contexto
         Directorio listaContactos = (Directorio) context.getAttribute("directorio");
 
+        // Verificar si la lista de contactos está presente
         if (listaContactos == null) {
+            // Si no está presente, redirigir al usuario a la página principal
             response.sendRedirect("index.jsp");
             return;
         }
-
+        response.sendRedirect("index.jsp");
         String action = request.getParameter("action");
 
         if ("deleteContact".equals(action)) {

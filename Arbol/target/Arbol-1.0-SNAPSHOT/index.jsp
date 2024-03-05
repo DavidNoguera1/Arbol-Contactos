@@ -61,6 +61,7 @@
     <div class="table-responsive">
         <%
             ArrayList<Contacto> listaContactos = (ArrayList<Contacto>) session.getAttribute("listaContactos");
+            
         %>
         <table id="contactosTable" class="table table-striped table-bordered table-dark">
             <thead>
@@ -74,7 +75,7 @@
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="contactosTableBody">
                 <%
                     if (listaContactos != null && !listaContactos.isEmpty()) {
                         for (Contacto contacto : listaContactos) {

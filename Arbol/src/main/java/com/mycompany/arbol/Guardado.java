@@ -49,12 +49,16 @@ public class Guardado implements Serializable {
         String absPath = context.getRealPath(relativePath);
         File archivo = new File(absPath);
 
+        if (!archivo.exists()) {
+            System.out.println("El archivo de datos de contactos no existe en la ruta: " + absPath);
+            return new Directorio(); // Devolver un nuevo Directorio vacío si el archivo no existe
+        }
+
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
             directorioContactos = (Directorio) ois.readObject();
-            System.out.println("Datos de contactos cargados exitosamente desde: contactos.ser");
+            System.out.println("Datos de contactos cargados exitosamente desde: " + absPath);
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("Error al cargar los datos de contactos: " + e.getMessage());
+            System.out.println("Excepción al cargar los datos de contactos: " + e);
         }
 
         if (directorioContactos == null) {
