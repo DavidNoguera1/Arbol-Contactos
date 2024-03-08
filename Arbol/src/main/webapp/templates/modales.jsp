@@ -111,10 +111,11 @@
                         <label for="id" class="col-form-label">ID:</label>
                         <input type="text" class="form-control" id="id" name="id" placeholder="Ingresa su ID" required>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 d-none">
                         <label for="nombre" class="col-form-label">Nombre:</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa su nombre" readonly required>
                     </div>
+
                     <div class="mb-3">
                         <label for="apellido" class="col-form-label">Apellido:</label>
                         <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingresa su apellido" required>

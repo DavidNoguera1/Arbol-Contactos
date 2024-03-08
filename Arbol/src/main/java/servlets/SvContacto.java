@@ -39,10 +39,10 @@ public class SvContacto extends HttpServlet implements Serializable {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-
+        
         // Obtener el contexto del servlet
         ServletContext context = config.getServletContext();
-
+        
         // Cargar los contactos del contexto
         try {
             directorioContactos = Guardado.cargarContactos(context);
@@ -54,24 +54,24 @@ public class SvContacto extends HttpServlet implements Serializable {
             directorioContactos = new Directorio();
             context.setAttribute("directorio", directorioContactos);
         }
+        
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Obtener el contexto del servlet
         ServletContext context = getServletContext();
 
         // Obtener la lista de contactos del contexto
         Directorio listaContactos = (Directorio) context.getAttribute("directorio");
 
-        // Verificar si la lista de contactos está presente
         if (listaContactos == null) {
-            // Si no está presente, redirigir al usuario a la página principal
             response.sendRedirect("index.jsp");
             return;
         }
-        response.sendRedirect("index.jsp");
+
         String action = request.getParameter("action");
 
         if ("deleteContact".equals(action)) {

@@ -9,7 +9,7 @@
         $.ajax({
             url: "SvContacto?action=cargarContactos", // La URL del servlet y el parámetro de acción
             type: "GET",
-            dataType: "json", // Especifica el tipo de datos que esperas recibir
+                dataType: "json", // Especifica el tipo de datos que esperas recibir
             success: function(response) {
                 // Maneja la respuesta exitosa
                 if (response && response.length > 0) {
